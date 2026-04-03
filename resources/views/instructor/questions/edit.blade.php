@@ -1,0 +1,74 @@
+@extends('layouts.app')
+
+@section('title', 'Modifier une question')
+
+@section('content')
+<div class="container mx-auto max-w-2xl">
+    <h1 class="text-2xl font-bold mb-6">Modifier la question</h1>
+
+    <form action="{{ route('instructor.questions.update', [$quiz, $question]) }}" method="POST" class="bg-white shadow rounded p-6">
+        @csrf @method('PUT')
+
+        <div class="mb-4">
+            <label class="block text-gray-700 font-bold mb-2">Texte</label>
+            <textarea name="question_text" rows="3" class="w-full border rounded px-3 py-2" required>{{ old('question_text', $question->question_text) }}</textarea>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+                <label class="block text-gray-700 font-bold mb-2">Type</label>
+                <select name="type" class="w-full border rounded px-3 py-2">
+                    <option value="single" @selected($question->type == 'single')>Choix unique</option>
+                    <option value="multiple" @selected($question->type == 'multiple')>Choix multiples</option>
+                    <option value="true_false" @selected($question->type == 'true_false')>Vrai / Faux</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-gray-700 font-bold mb-2">Points</label>
+                <input type="number" name="points" value="{{ old('points', $question->points) }}" class="w-full border rounded px-3 py-2" required>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label class="block text-gray-700 font-bold mb-2">Explication</label>
+            <textarea name="explanation" rows="2" class="w-full border rounded px-3 py-2">{{ old('explanation', $question->explanation) }}</textarea>
+        </div>
+
+        <h3 class="font-bold mb-2">Réponses</h3>
+        <div id="answers-container">
+            @foreach($question->answers as $index => $answer)
+                <div class="answer-item grid grid-cols-[1fr,auto] gap-2 mb-2">
+                    <input type="text" name="answers[{{ $index }}][text]" value="{{ old("answers.$index.text", $answer->answer_text) }}" class="w-full border rounded px-3 py-2" placeholder="Texte de la réponse" required>
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" name="answers[{{ $index }}][is_correct]" value="1" @checked($answer->is_correct) class="mr-1"> Correcte
+                    </label>
+                    <input type="hidden" name="answers[{{ $index }}][id]" value="{{ $answer->id }}">
+                </div>
+            @endforeach
+        </div>
+        <button type="button" id="add-answer" class="text-indigo-600 text-sm mb-4">+ Ajouter une réponse</button>
+
+        <div class="flex justify-end space-x-2">
+            <a href="{{ route('instructor.courses.quizzes.edit', [$quiz->course, $quiz]) }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Annuler</a>
+            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">Mettre à jour</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    let answerCount = {{ $question->answers->count() }};
+    document.getElementById('add-answer').addEventListener('click', function() {
+        const container = document.getElementById('answers-container');
+        const div = document.createElement('div');
+        div.className = 'answer-item grid grid-cols-[1fr,auto] gap-2 mb-2';
+        div.innerHTML = `
+            <input type="text" name="answers[${answerCount}][text]" class="w-full border rounded px-3 py-2" placeholder="Texte de la réponse" required>
+            <label class="inline-flex items-center">
+                <input type="checkbox" name="answers[${answerCount}][is_correct]" value="1" class="mr-1"> Correcte
+            </label>
+        `;
+        container.appendChild(div);
+        answerCount++;
+    });
+</script>
+@endsection
