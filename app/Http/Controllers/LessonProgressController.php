@@ -25,23 +25,18 @@ class LessonProgressController extends Controller
             $progress->completed_at = now();
             $progress->save();
 
-            // Vérifier si toutes les leçons du cours sont terminées
-            $totalLessons = $course->lessons()->count();
-            $completedLessons = $user->lessonProgress()
-                ->where('completed', true)
-                ->whereHas('lesson.chapter', fn($q) => $q->where('course_id', $course->id))
-                ->count();
+            // Récupérer toutes les leçons du cours triées par chapitre puis par ordre
+            $lessons = $course->lessons()
+                ->join('chapters', 'lessons.chapter_id', '=', 'chapters.id')
+                ->orderBy('chapters.order')
+                ->orderBy('lessons.order')
+                ->select('lessons.*')
+                ->get();
 
-            if ($totalLessons > 0 && $completedLessons == $totalLessons) {
-                $enrollment = $user->enrollments()->where('course_id', $course->id)->first();
-                $enrollment->status = 'completed';
-                $enrollment->completed_at = now();
-                $enrollment->save();
-            }
+            // Debug : afficher les IDs des leçons dans l'ordre
+            // dd($lessons->pluck('id')); // Décommentez pour voir
 
-            // Trouver la leçon suivante
             $nextLesson = null;
-            $lessons = $course->lessons()->orderBy('order')->get();
             $found = false;
             foreach ($lessons as $l) {
                 if ($found) {
@@ -53,10 +48,25 @@ class LessonProgressController extends Controller
                 }
             }
 
+            // Si aucune leçon suivante trouvée, rediriger vers le cours
             if ($nextLesson) {
                 return redirect()->route('lessons.show', $nextLesson)->with('success', 'Leçon terminée ! Passage à la suivante.');
             } else {
-                return redirect()->route('courses.show', $course)->with('success', 'Félicitations ! Vous avez terminé toutes les leçons de ce cours.');
+                // Vérifier si toutes les leçons sont terminées
+                $totalLessons = $course->lessons()->count();
+                $completedLessons = $user->lessonProgress()
+                    ->where('completed', true)
+                    ->whereHas('lesson.chapter', fn($q) => $q->where('course_id', $course->id))
+                    ->count();
+
+                if ($totalLessons > 0 && $completedLessons == $totalLessons) {
+                    $enrollment = $user->enrollments()->where('course_id', $course->id)->first();
+                    $enrollment->status = 'completed';
+                    $enrollment->completed_at = now();
+                    $enrollment->save();
+                    return redirect()->route('courses.show', $course)->with('success', 'Félicitations ! Vous avez terminé toutes les leçons de ce cours.');
+                }
+                return redirect()->route('courses.show', $course)->with('success', 'Leçon terminée !');
             }
         }
 

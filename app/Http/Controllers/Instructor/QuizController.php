@@ -34,7 +34,9 @@ class QuizController extends Controller
 
         $quiz = Quiz::create($data);
 
-        return redirect()->route('instructor.quizzes.edit', [$course, $quiz])->with('success', 'Quiz créé. Ajoutez maintenant des questions.');
+        // ✅ Correction : utiliser la route imbriquée
+        return redirect()->route('instructor.courses.quizzes.edit', [$course, $quiz])
+                         ->with('success', 'Quiz créé. Ajoutez maintenant des questions.');
     }
 
     // Quiz attaché à une leçon
@@ -61,7 +63,8 @@ class QuizController extends Controller
 
         $quiz = Quiz::create($data);
 
-        return redirect()->route('instructor.quizzes.edit', [$lesson->course, $quiz])->with('success', 'Quiz créé. Ajoutez maintenant des questions.');
+        return redirect()->route('instructor.courses.quizzes.edit', [$lesson->course, $quiz])
+                         ->with('success', 'Quiz créé. Ajoutez maintenant des questions.');
     }
 
     public function edit(Course $course, Quiz $quiz)
@@ -85,12 +88,14 @@ class QuizController extends Controller
 
         $quiz->update($data);
 
-        return redirect()->route('instructor.quizzes.edit', [$course, $quiz])->with('success', 'Quiz mis à jour.');
+        return redirect()->route('instructor.courses.quizzes.edit', [$course, $quiz])
+                         ->with('success', 'Quiz mis à jour.');
     }
 
     public function destroy(Course $course, Quiz $quiz)
     {
         $quiz->delete();
-        return redirect()->route('instructor.courses.edit', $course)->with('success', 'Quiz supprimé.');
+        return redirect()->route('instructor.courses.edit', $course)
+                         ->with('success', 'Quiz supprimé.');
     }
 }

@@ -41,22 +41,30 @@
             <h2 class="text-xl font-display font-semibold mb-4 flex items-center">
                 <i class="fas fa-play-circle text-primary mr-2"></i> Poursuivre l'apprentissage
             </h2>
-            @foreach($enrollments->take(2) as $enrollment)
-                <div class="layer-lift p-5 mb-4 transition hover:shadow-ambient">
-                    <div class="flex flex-wrap justify-between items-start gap-4">
-                        <div class="flex-1">
-                            <h3 class="font-display font-bold text-lg">{{ $enrollment->course->title }}</h3>
-                            <p class="text-sm text-on-surface-variant mt-1">{{ $enrollment->course->chapters->first()->title ?? 'Module 1' }} • {{ $enrollment->progress_percent }}% terminé</p>
+            @if($enrollments->where('status', 'active')->count() > 0)
+                @foreach($enrollments->take(2) as $enrollment)
+                    <div class="layer-lift p-5 mb-4 transition hover:shadow-ambient">
+                        <div class="flex flex-wrap justify-between items-start gap-4">
+                            <div class="flex-1">
+                                <h3 class="font-display font-bold text-lg">{{ $enrollment->course->title }}</h3>
+                                <p class="text-sm text-on-surface-variant mt-1">{{ $enrollment->course->chapters->first()->title ?? 'Module 1' }} • {{ $enrollment->progress_percent }}% terminé</p>
+                            </div>
+                            <a href="{{ route('courses.show', $enrollment->course) }}" class="btn-primary py-2 px-4 text-sm whitespace-nowrap">Continuer</a>
                         </div>
-                        <a href="{{ route('courses.show', $enrollment->course) }}" class="btn-primary py-2 px-4 text-sm whitespace-nowrap">Continuer</a>
-                    </div>
-                    <div class="mt-4">
-                        <div class="w-full bg-secondary-fixed rounded-full h-2">
-                            <div class="progress-gradient h-2 rounded-full" style="width: {{ $enrollment->progress_percent }}%"></div>
+                        <div class="mt-4">
+                            <div class="w-full bg-secondary-fixed rounded-full h-2">
+                                <div class="progress-gradient h-2 rounded-full" style="width: {{ $enrollment->progress_percent }}%"></div>
+                            </div>
                         </div>
                     </div>
+                @endforeach
+            @else
+                <div class="layer-lift p-8 text-center">
+                    <i class="fas fa-book-open text-4xl text-primary/30 mb-3 block"></i>
+                    <p class="text-on-surface-variant">Vous n’avez aucun cours en cours pour le moment.</p>
+                    <a href="{{ route('courses.index') }}" class="inline-block mt-4 text-primary hover:underline">Explorer le catalogue →</a>
                 </div>
-            @endforeach
+            @endif
         </div>
 
         <!-- Tous mes cours -->
@@ -67,31 +75,40 @@
                 </h2>
                 <a href="{{ route('courses.index') }}" class="text-primary text-sm hover:underline">Voir le catalogue →</a>
             </div>
-            <div class="grid md:grid-cols-2 gap-4">
-                @foreach($enrollments as $enrollment)
-                    <div class="layer-lift p-4 transition hover:shadow-ambient">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <span class="text-xs font-medium bg-secondary-fixed text-secondary rounded-full px-2 py-0.5">
-                                    {{ $enrollment->course->level == 'beginner' ? 'Débutant' : ($enrollment->course->level == 'intermediate' ? 'Intermédiaire' : 'Avancé') }}
-                                </span>
-                                <h3 class="font-display font-semibold mt-2 line-clamp-1">{{ $enrollment->course->title }}</h3>
+
+            @if($enrollments->count() > 0)
+                <div class="grid md:grid-cols-2 gap-4">
+                    @foreach($enrollments as $enrollment)
+                        <div class="layer-lift p-4 transition hover:shadow-ambient">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span class="text-xs font-medium bg-secondary-fixed text-secondary rounded-full px-2 py-0.5">
+                                        {{ $enrollment->course->level == 'beginner' ? 'Débutant' : ($enrollment->course->level == 'intermediate' ? 'Intermédiaire' : 'Avancé') }}
+                                    </span>
+                                    <h3 class="font-display font-semibold mt-2 line-clamp-1">{{ $enrollment->course->title }}</h3>
+                                </div>
+                                <span class="text-sm font-bold text-primary">{{ $enrollment->progress_percent }}%</span>
                             </div>
-                            <span class="text-sm font-bold text-primary">{{ $enrollment->progress_percent }}%</span>
+                            <div class="mt-3 w-full bg-secondary-fixed rounded-full h-1.5">
+                                <div class="progress-gradient h-1.5 rounded-full" style="width: {{ $enrollment->progress_percent }}%"></div>
+                            </div>
+                            <div class="mt-3 text-right">
+                                <a href="{{ route('courses.show', $enrollment->course) }}" class="text-primary text-sm hover:underline">Reprendre →</a>
+                            </div>
                         </div>
-                        <div class="mt-3 w-full bg-secondary-fixed rounded-full h-1.5">
-                            <div class="progress-gradient h-1.5 rounded-full" style="width: {{ $enrollment->progress_percent }}%"></div>
-                        </div>
-                        <div class="mt-3 text-right">
-                            <a href="{{ route('courses.show', $enrollment->course) }}" class="text-primary text-sm hover:underline">Reprendre →</a>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
+                    @endforeach
+                </div>
+            @else
+                <div class="layer-lift p-8 text-center">
+                    <i class="fas fa-folder-open text-4xl text-primary/30 mb-3 block"></i>
+                    <p class="text-on-surface-variant">Vous n’êtes encore inscrit à aucun cours.</p>
+                    <a href="{{ route('courses.index') }}" class="inline-block mt-4 btn-primary">Découvrir les cours</a>
+                </div>
+            @endif
         </div>
     </div>
 
-    <!-- Colonne latérale : profil + insights + badge -->
+    <!-- Colonne latérale (inchangée) -->
     <div class="space-y-6">
         <!-- Carte de profil -->
         <div class="layer-lift p-5 text-center">

@@ -9,9 +9,34 @@ use Illuminate\Support\Str;
 
 class CourseController extends Controller
 {
-    public function index()
+   public function index(Request $request)
     {
-        $courses = auth()->user()->courses()->latest()->paginate(10);
+        $query = auth()->user()->courses();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+        if ($request->filled('level')) {
+            $query->where('level', $request->level);
+        }
+        if ($request->filled('status')) {
+            if ($request->status === 'published') {
+                $query->where('published', true);
+            } elseif ($request->status === 'draft') {
+                $query->where('published', false);
+            }
+        }
+
+        $courses = $query->latest()->paginate(12);
+
+        if ($request->ajax()) {
+            return view('instructor.courses._grid', compact('courses'));
+        }
+
         return view('instructor.courses.index', compact('courses'));
     }
 

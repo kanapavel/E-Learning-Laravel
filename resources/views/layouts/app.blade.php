@@ -28,6 +28,15 @@
       .nav-link:hover { color: #0056d2; }
       .nav-link::after { content: ""; position: absolute; left: 0; bottom: -4px; width: 0%; height: 2px; background: #0056d2; transition: 0.3s; }
       .nav-link:hover::after { width: 100%; }
+      /* Correction affichage vidéo */
+        video {
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+        video::-webkit-media-controls {
+            transform: none !important;
+        }
     </style>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>

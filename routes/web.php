@@ -74,6 +74,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::post('/{thread}/repondre', [ForumPostController::class, 'store'])->name('posts.store');
         Route::patch('/posts/{post}/solution', [ForumPostController::class, 'markSolution'])->name('posts.solution');
+        Route::delete('/posts/{post}', [ForumPostController::class, 'destroy'])->name('posts.destroy');
     });
 
     // Profil utilisateur (routes supplémentaires)
