@@ -83,6 +83,16 @@
                             </a>
                         @endif
                         <hr class="my-2 border-outline/20">
+                        <!-- Lien Notifications dans la sidebar -->
+                        <a href="{{ route('notifications.index') }}" class="flex items-center space-x-3 text-on-surface-variant hover:text-primary transition">
+                            <i class="far fa-bell w-5"></i>
+                            <span>Notifications</span>
+                            @if(auth()->user()->unreadNotifications->count())
+                                <span class="ml-auto bg-secondary text-white text-xs rounded-full px-1.5 py-0.5">
+                                    {{ auth()->user()->unreadNotifications->count() }}
+                                </span>
+                            @endif
+                        </a>
                         <a href="{{ route('profile.edit') }}" class="flex items-center space-x-3 text-on-surface-variant hover:text-primary transition">
                             <i class="fas fa-user w-5"></i>
                             <span>Mon profil</span>
@@ -134,9 +144,20 @@
                         @endauth
                     </div>
 
-                    <!-- Zone droite : utilisateur (desktop) + hamburger (mobile) -->
+                    <!-- Zone droite : notifications, utilisateur, hamburger -->
                     <div class="flex items-center space-x-4">
                         @auth
+                            <!-- Icône notifications avec compteur positionné absolument -->
+                            <a href="{{ route('notifications.index') }}" class="relative inline-flex items-center justify-center text-on-surface-variant hover:text-primary">
+                                <i class="far fa-bell text-xl"></i>
+                                @php $count = auth()->user()->unreadNotifications->count(); @endphp
+                                @if($count)
+                                    <span class="notification-badge" style="position: absolute; top: -0.25rem; right: -0.5rem; background-color: #006c47; color: white; font-size: 0.7rem; font-weight: bold; width: 1.25rem; height: 1.25rem; display: flex; align-items: center; justify-content: center; border-radius: 9999px;">
+                                        {{ $count }}
+                                    </span>
+                                @endif
+                            </a>
+
                             <!-- Menu utilisateur (desktop) -->
                             <div x-data="{ open: false }" class="relative hidden lg:block">
                                 <button @click="open = !open" class="flex items-center space-x-2 focus:outline-none">
@@ -188,7 +209,7 @@
             </div>
         </main>
 
-        <!-- Footer (collera en bas grâce à flex-1 sur main) -->
+        <!-- Footer -->
         <footer class="bg-surface-low border-t border-outline/20 py-12">
             <div class="container mx-auto px-4">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-8">

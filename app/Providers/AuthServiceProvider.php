@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Models\Lesson;
 use App\Policies\LessonPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Notifications\DatabaseNotification;
+
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -15,6 +17,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Lesson::class => LessonPolicy::class,
+        DatabaseNotification::class => \App\Policies\NotificationPolicy::class,
     ];
 
     /**

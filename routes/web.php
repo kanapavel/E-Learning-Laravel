@@ -13,6 +13,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ProfileController; // ← IMPORTANT
+use App\Http\Controllers\NotificationController;
 
 // Contrôleurs instructeur
 use App\Http\Controllers\Instructor\CourseController as InstructorCourseController;
@@ -82,6 +83,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profil', [ProfileController::class, 'update'])->name('profile.update');
     Route::patch('/profil/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
     Route::delete('/profil', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    //notifications
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::patch('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::patch('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
+    Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
+    Route::delete('/notifications', [NotificationController::class, 'destroyAll'])->name('notifications.destroy-all');
 });
 
 // ─────────────────────────────────────────────────────────
