@@ -117,7 +117,7 @@
                                 </a>
                                 <form action="{{ route('instructor.questions.destroy', [$quiz, $question]) }}" method="POST" class="inline">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="text-red-500 hover:text-red-700 text-sm font-medium transition flex items-center gap-1" onclick="return confirm('Supprimer cette question ?')">
+                                    <button type="submit" class="text-red-600 hover:text-red-700 text-sm font-medium transition flex items-center gap-1" onclick="return confirm('Supprimer cette question ?')">
                                         <i class="fas fa-trash-alt"></i> Supprimer
                                     </button>
                                 </form>

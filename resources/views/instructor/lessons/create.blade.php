@@ -96,22 +96,14 @@
                     </div>
                 </div>
 
-                <!-- Partie texte -->
+                <!-- Partie texte avec Quill -->
                 <div x-show="lessonType === 'text' || lessonType === 'mixed'" class="transition mt-6">
                     <label class="block text-sm font-semibold text-on-surface mb-2">Contenu de la leçon</label>
                     <div class="border border-outline/20 rounded-xl overflow-hidden">
-                        <div class="bg-surface-low p-2 border-b border-outline/20 flex flex-wrap gap-1">
-                            <button type="button" onclick="wrapText('**', '**')" class="px-2 py-1 rounded hover:bg-surface-high" title="Gras">B</button>
-                            <button type="button" onclick="wrapText('*', '*')" class="px-2 py-1 rounded hover:bg-surface-high" title="Italique">I</button>
-                            <button type="button" onclick="wrapText('[', '](url)')" class="px-2 py-1 rounded hover:bg-surface-high" title="Lien">🔗</button>
-                            <button type="button" onclick="insertList()" class="px-2 py-1 rounded hover:bg-surface-high" title="Liste à puces">•</button>
-                            <button type="button" onclick="insertNumberedList()" class="px-2 py-1 rounded hover:bg-surface-high" title="Liste numérotée">1.</button>
-                            <button type="button" onclick="wrapText('# ', '')" class="px-2 py-1 rounded hover:bg-surface-high" title="Titre H1">H1</button>
-                            <button type="button" onclick="wrapText('## ', '')" class="px-2 py-1 rounded hover:bg-surface-high" title="Titre H2">H2</button>
-                        </div>
-                        <textarea name="content" id="textContent" rows="12" class="w-full p-3 focus:outline-none resize-y font-mono text-sm" placeholder="Rédigez votre contenu (Markdown ou HTML)">{{ old('content') }}</textarea>
+                        <div id="quill-editor" style="height: 400px;"></div>
+                        <textarea name="content" id="content-input" style="display:none;"></textarea>
                     </div>
-                    <p class="text-xs text-on-surface-variant mt-2">Utilisez la barre d'outils pour formater votre texte.</p>
+                    <p class="text-xs text-on-surface-variant mt-2">Utilisez l'éditeur pour structurer votre texte (titres, listes, gras, etc.). Le contenu collé depuis Word ou Google Docs sera automatiquement nettoyé.</p>
                 </div>
 
                 <!-- Ressources (fichiers) -->
@@ -144,7 +136,7 @@
                 </div>
             </div>
 
-            <!-- Durée et Ordre (en dehors du composant Alpine, mais peuvent être laissés) -->
+            <!-- Durée et Ordre -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-sm font-semibold text-on-surface mb-2">Durée (minutes)</label>
@@ -153,7 +145,7 @@
                 <div>
                     <label class="block text-sm font-semibold text-on-surface mb-2">Ordre d'affichage</label>
                     <div class="flex items-center gap-4 flex-wrap">
-                        <input type="number" name="order" value="{{ old('order', $chapter->lessons->count() + 1) }}" class="input-field w-32 " min="1" step="1">
+                        <input type="number" name="order" value="{{ old('order', $chapter->lessons->count() + 1) }}" class="input-field w-32" min="1" step="1">
                         <span class="text-sm text-on-surface-variant">Position actuelle : <span class="font-medium text-primary">{{ $chapter->lessons->count() + 1 }}</span></span>
                     </div>
                 </div>
@@ -180,6 +172,10 @@
     </div>
 </div>
 
+<!-- Styles et scripts pour Quill -->
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
+
 <script>
     function lessonFormHandler() {
         return {
@@ -192,6 +188,28 @@
 
             initLessonType(type) {
                 this.lessonType = type;
+                // Initialiser Quill une seule fois si le div existe
+                if (!window.quill && document.getElementById('quill-editor')) {
+                    window.quill = new Quill('#quill-editor', {
+                        theme: 'snow',
+                        placeholder: 'Rédigez votre contenu...',
+                        modules: {
+                            toolbar: [
+                                [{ header: [1, 2, 3, false] }],
+                                ['bold', 'italic', 'underline'],
+                                ['link', 'blockquote', 'code-block'],
+                                [{ list: 'ordered' }, { list: 'bullet' }],
+                                ['clean']
+                            ]
+                        }
+                    });
+                    // Synchronisation avant soumission
+                    const form = document.querySelector('form');
+                    const hiddenInput = document.getElementById('content-input');
+                    form.addEventListener('submit', () => {
+                        hiddenInput.value = window.quill.root.innerHTML;
+                    });
+                }
             },
             handleVideoSelect(event) {
                 this.processVideoFile(event.target.files[0]);
@@ -261,38 +279,6 @@
                 return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
             }
         };
-    }
-
-    // Fonctions globales pour l'éditeur de texte
-    function wrapText(before, after) {
-        const textarea = document.getElementById('textContent');
-        if (!textarea) return;
-        const start = textarea.selectionStart;
-        const end = textarea.selectionEnd;
-        const selected = textarea.value.substring(start, end);
-        const replacement = before + selected + after;
-        textarea.value = textarea.value.substring(0, start) + replacement + textarea.value.substring(end);
-        textarea.focus();
-        textarea.selectionStart = start + before.length;
-        textarea.selectionEnd = start + before.length + selected.length;
-    }
-    function insertList() {
-        const textarea = document.getElementById('textContent');
-        if (!textarea) return;
-        const start = textarea.selectionStart;
-        const line = '\n- Élément de liste';
-        textarea.value = textarea.value.substring(0, start) + line + textarea.value.substring(start);
-        textarea.focus();
-        textarea.selectionStart = start + line.length;
-    }
-    function insertNumberedList() {
-        const textarea = document.getElementById('textContent');
-        if (!textarea) return;
-        const start = textarea.selectionStart;
-        const line = '\n1. Élément numéroté';
-        textarea.value = textarea.value.substring(0, start) + line + textarea.value.substring(start);
-        textarea.focus();
-        textarea.selectionStart = start + line.length;
     }
 
     document.addEventListener('alpine:init', () => {

@@ -84,7 +84,7 @@
             </label>
         </div>
 
-        <!-- Actions (boutons en bas du formulaire) -->
+        <!-- Actions -->
         <div class="flex flex-col sm:flex-row justify-end gap-3 pt-2">
             <a href="{{ route('instructor.courses.index') }}" 
                class="inline-flex justify-center items-center gap-2 px-6 py-3 rounded-xl border border-outline/30 text-on-surface-variant hover:bg-surface-low transition text-base font-medium">
@@ -126,12 +126,13 @@
                                    class="text-primary hover:text-primary/80 text-sm font-medium transition flex items-center gap-1">
                                     <i class="fas fa-edit"></i> Modifier
                                 </a>
-                                <form action="{{ route('instructor.courses.chapters.destroy', [$course, $chapter]) }}" method="POST" class="inline">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="text-red-500 hover:text-red-700 text-sm font-medium transition flex items-center gap-1" onclick="return confirm('Supprimer ce chapitre et toutes ses leçons ?')">
-                                        <i class="fas fa-trash-alt"></i> Supprimer
-                                    </button>
-                                </form>
+                                <button type="button" 
+                                        class="delete-item-btn text-red-600 hover:text-red-700 text-sm font-medium transition flex items-center gap-1"
+                                        data-url="{{ route('instructor.courses.chapters.destroy', [$course, $chapter]) }}"
+                                        data-name="{{ $chapter->title }}"
+                                        data-type="chapitre">
+                                    <i class="fas fa-trash-alt"></i> Supprimer
+                                </button>
                             </div>
                         </div>
                         <!-- Liste des leçons -->
@@ -151,6 +152,8 @@
                                                         <span class="ml-2 text-[10px] bg-surface-high text-on-surface-variant px-2 py-0.5 rounded-full">Vidéo</span>
                                                     @elseif($lesson->type == 'text')
                                                         <span class="ml-2 text-[10px] bg-surface-high text-on-surface-variant px-2 py-0.5 rounded-full">Texte</span>
+                                                    @elseif($lesson->type == 'mixed')
+                                                        <span class="ml-2 text-[10px] bg-surface-high text-on-surface-variant px-2 py-0.5 rounded-full">📹 + 📝 Mixte</span>
                                                     @endif
                                                 </div>
                                             </div>
@@ -158,12 +161,13 @@
                                                 <a href="{{ route('instructor.chapters.lessons.edit', [$chapter, $lesson]) }}" class="text-primary hover:underline flex items-center gap-1">
                                                     <i class="fas fa-edit text-xs"></i> Modifier
                                                 </a>
-                                                <form action="{{ route('instructor.chapters.lessons.destroy', [$chapter, $lesson]) }}" method="POST" class="inline">
-                                                    @csrf @method('DELETE')
-                                                    <button type="submit" class="text-red-500 hover:underline flex items-center gap-1" onclick="return confirm('Supprimer cette leçon ?')">
-                                                        <i class="fas fa-trash-alt text-xs"></i> Supprimer
-                                                    </button>
-                                                </form>
+                                                <button type="button" 
+                                                        class="delete-item-btn text-red-600 hover:underline flex items-center gap-1 text-sm"
+                                                        data-url="{{ route('instructor.chapters.lessons.destroy', [$chapter, $lesson]) }}"
+                                                        data-name="{{ $lesson->title }}"
+                                                        data-type="leçon">
+                                                    <i class="fas fa-trash-alt text-xs"></i> Supprimer
+                                                </button>
                                             </div>
                                         </li>
                                     @endforeach
@@ -220,12 +224,13 @@
                                 <a href="{{ route('instructor.courses.quizzes.edit', [$course, $quiz]) }}" class="text-primary hover:underline flex items-center gap-1">
                                     <i class="fas fa-edit text-xs"></i> Modifier
                                 </a>
-                                <form action="{{ route('instructor.courses.quizzes.destroy', [$course, $quiz]) }}" method="POST" class="inline">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="text-red-500 hover:underline flex items-center gap-1" onclick="return confirm('Supprimer ce quiz ?')">
-                                        <i class="fas fa-trash-alt text-xs"></i> Supprimer
-                                    </button>
-                                </form>
+                                <button type="button" 
+                                        class="delete-item-btn text-red-600 hover:underline flex items-center gap-1 text-sm"
+                                        data-url="{{ route('instructor.courses.quizzes.destroy', [$course, $quiz]) }}"
+                                        data-name="{{ $quiz->title }}"
+                                        data-type="quiz">
+                                    <i class="fas fa-trash-alt text-xs"></i> Supprimer
+                                </button>
                             </div>
                         </li>
                     @endforeach
@@ -241,7 +246,36 @@
     </div>
 </div>
 
+<!-- Modal de confirmation de suppression -->
+<div id="deleteModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full mx-4 p-6 transform transition-all">
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                <i class="fas fa-trash-alt text-red-500"></i>
+            </div>
+            <h3 class="text-lg font-display font-semibold">Confirmer la suppression</h3>
+        </div>
+        <p class="text-on-surface-variant text-sm mb-6">
+            Êtes-vous sûr de vouloir supprimer <strong id="deleteItemName"></strong> ?<br>
+            Cette action est irréversible.
+        </p>
+        <div class="flex justify-end gap-3">
+            <button id="cancelDeleteBtn" class="px-4 py-2 rounded-xl border border-outline/30 text-on-surface-variant hover:bg-surface-low transition">
+                Annuler
+            </button>
+            <form id="deleteForm" method="POST" action="">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="px-4 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700 transition">
+                    Supprimer définitivement
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
+    // Prévisualisation de la miniature (inchangée)
     function previewThumbnail(event) {
         const file = event.target.files[0];
         const fileNameSpan = document.getElementById('file_name');
@@ -261,5 +295,34 @@
             previewDiv.classList.add('hidden');
         }
     }
+
+    // Gestion de la modale de suppression
+    const modal = document.getElementById('deleteModal');
+    const deleteForm = document.getElementById('deleteForm');
+    const deleteItemNameSpan = document.getElementById('deleteItemName');
+    const cancelBtn = document.getElementById('cancelDeleteBtn');
+
+    document.querySelectorAll('.delete-item-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const url = this.dataset.url;
+            const name = this.dataset.name;
+            const type = this.dataset.type;
+            deleteItemNameSpan.textContent = `${type} "${name}"`;
+            deleteForm.action = url;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        });
+    });
+
+    function closeModal() {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+
+    cancelBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) closeModal();
+    });
 </script>
 @endsection
