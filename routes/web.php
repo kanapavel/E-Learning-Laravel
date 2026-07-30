@@ -89,6 +89,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
     Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
     Route::delete('/notifications', [NotificationController::class, 'destroyAll'])->name('notifications.destroy-all');
+    // Live sessions
+    Route::get('live/{session}', [App\Http\Controllers\LiveController::class, 'show'])->name('live.show');
 });
 
 // ─────────────────────────────────────────────────────────
@@ -119,7 +121,10 @@ Route::middleware(['auth', 'role:admin,instructor'])
             Route::put('/questions/{question}', [InstructorQuestionController::class, 'update'])->name('questions.update');
             Route::delete('/questions/{question}', [InstructorQuestionController::class, 'destroy'])->name('questions.destroy');
         });
-    });
+        Route::resource('courses.live', 'App\Http\Controllers\Instructor\LiveSessionController')->except(['show']);
+        Route::post('courses/{course}/live/{session}/start', 'App\Http\Controllers\Instructor\LiveSessionController@start')->name('courses.live.start');
+        Route::post('courses/{course}/live/{session}/end', 'App\Http\Controllers\Instructor\LiveSessionController@end')->name('courses.live.end');
+});
 
 // ─────────────────────────────────────────────────────────
 // 5. Routes administrateur (gestion des utilisateurs)

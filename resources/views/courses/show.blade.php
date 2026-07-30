@@ -37,6 +37,42 @@
                     </div>
                 </div>
 
+                <!-- ================== SESSIONS EN DIRECT (pour inscrits) ================== -->
+                @php
+                    $liveSessions = $course->liveSessions()
+                        ->whereIn('status', ['scheduled', 'live'])
+                        ->orderBy('scheduled_at', 'asc')
+                        ->get();
+                @endphp
+                @if($liveSessions->count())
+                    <div class="bg-gradient-to-br from-purple-50/30 to-white rounded-2xl p-5 border border-purple-200/50">
+                        <h3 class="font-display font-semibold text-lg flex items-center gap-2 mb-3">
+                            <i class="fas fa-broadcast text-purple-600"></i> Sessions en direct
+                        </h3>
+                        <div class="space-y-3">
+                            @foreach($liveSessions as $session)
+                                <div class="flex flex-wrap justify-between items-center gap-3 bg-white/80 backdrop-blur-sm rounded-xl px-4 py-3 border border-outline/20">
+                                    <div>
+                                        <span class="font-medium">{{ $session->title }}</span>
+                                        @if($session->status == 'live')
+                                            <span class="ml-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full animate-pulse">🔴 EN DIRECT</span>
+                                        @elseif($session->scheduled_at)
+                                            <span class="ml-2 text-xs text-on-surface-variant">📅 {{ $session->scheduled_at->format('d/m/Y H:i') }}</span>
+                                        @endif
+                                    </div>
+                                    <a href="{{ route('live.show', $session) }}" class="btn-primary py-1.5 px-4 text-sm flex items-center gap-1">
+                                        @if($session->status == 'live')
+                                            <i class="fas fa-play"></i> Regarder
+                                        @else
+                                            Voir
+                                        @endif
+                                    </a>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+
                 <!-- Contenu complet du cours (chapitres/leçons) -->
                 <div>
                     <h2 class="text-2xl font-display font-semibold mb-5 flex items-center gap-2">
@@ -188,12 +224,22 @@
                 </div>
             @endif
 
-            <!-- Message pour l'instructeur lui-même -->
+            <!-- Message pour l'instructeur avec accès aux sessions -->
             @if(auth()->check() && auth()->id() == $course->user_id)
                 <div class="bg-amber-50 rounded-2xl p-5 text-center border border-amber-200">
                     <i class="fas fa-chalkboard-teacher text-amber-600 text-2xl mb-2 block"></i>
-                    <p class="text-sm text-amber-800">Vous êtes l'instructeur de ce cours. Vous ne pouvez pas vous inscrire.</p>
-                    <a href="{{ route('instructor.courses.edit', $course) }}" class="mt-3 inline-block text-primary text-sm hover:underline">Modifier le cours</a>
+                    <p class="text-sm text-amber-800">Vous êtes l'instructeur de ce cours.</p>
+                    <div class="mt-3 flex flex-wrap justify-center items-center gap-3">
+                        <a href="{{ route('instructor.courses.edit', $course) }}" class="inline-flex items-center gap-1 text-primary text-sm hover:underline">
+                            <i class="fas fa-edit"></i> Modifier
+                        </a>
+                        <a href="{{ route('instructor.courses.live.index', $course) }}" class="inline-flex items-center gap-1 text-purple-600 text-sm hover:underline">
+                            <i class="fas fa-broadcast"></i> Sessions
+                        </a>
+                        <a href="{{ route('instructor.courses.live.create', $course) }}" class="inline-flex items-center gap-1 text-green-600 text-sm hover:underline">
+                            <i class="fas fa-plus-circle"></i> Nouvelle session
+                        </a>
+                    </div>
                 </div>
             @endif
         </div>
