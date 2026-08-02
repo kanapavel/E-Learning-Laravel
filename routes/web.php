@@ -90,7 +90,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
     Route::delete('/notifications', [NotificationController::class, 'destroyAll'])->name('notifications.destroy-all');
     // Live sessions
-    Route::get('live/{session}', [App\Http\Controllers\LiveController::class, 'show'])->name('live.show');
+    Route::get('live/{live}', [App\Http\Controllers\LiveController::class, 'show'])->name('live.show');
 });
 
 // ─────────────────────────────────────────────────────────
@@ -122,8 +122,8 @@ Route::middleware(['auth', 'role:admin,instructor'])
             Route::delete('/questions/{question}', [InstructorQuestionController::class, 'destroy'])->name('questions.destroy');
         });
         Route::resource('courses.live', 'App\Http\Controllers\Instructor\LiveSessionController')->except(['show']);
-        Route::post('courses/{course}/live/{session}/start', 'App\Http\Controllers\Instructor\LiveSessionController@start')->name('courses.live.start');
-        Route::post('courses/{course}/live/{session}/end', 'App\Http\Controllers\Instructor\LiveSessionController@end')->name('courses.live.end');
+Route::post('courses/{course}/live/{live}/start', [App\Http\Controllers\Instructor\LiveSessionController::class, 'start'])->name('courses.live.start');
+Route::post('courses/{course}/live/{live}/end', [App\Http\Controllers\Instructor\LiveSessionController::class, 'end'])->name('courses.live.end');
 });
 
 // ─────────────────────────────────────────────────────────

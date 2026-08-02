@@ -134,8 +134,8 @@
                             @endif
 
                             @if($session->status == 'live')
-                                <a href="{{ route('live.show', $session) }}" target="_blank" 
-                                   class="inline-flex items-center gap-1 px-3 py-1 text-xs text-primary hover:bg-primary-fixed rounded-lg transition">
+                                <a href="{{ route('live.show', ['live' => $session]) }}" target="_blank" 
+                                    class="inline-flex items-center gap-1 px-3 py-1 text-xs text-primary hover:bg-primary-fixed rounded-lg transition">
                                     <i class="fas fa-eye"></i> Voir
                                 </a>
                                 <form action="{{ route('instructor.courses.live.end', [$course, $session]) }}" method="POST" class="inline">

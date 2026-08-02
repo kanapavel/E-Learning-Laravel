@@ -42,22 +42,20 @@ class LiveSessionController extends Controller
             $data['thumbnail'] = $path;
         }
 
-        $session = LiveSession::create($data);
+        $live = LiveSession::create($data);
 
         $students = $course->students;
-        Notification::send($students, new NewLiveSessionNotification($session));
+        Notification::send($students, new NewLiveSessionNotification($live));
 
         return redirect()->route('instructor.courses.live.index', $course)
                          ->with('success', 'Session en direct programmée !');
     }
 
-    // ⭐ MODIFICATION ICI : $session → $live
     public function edit(Course $course, LiveSession $live)
     {
         return view('instructor.live.edit', compact('course', 'live'));
     }
 
-    // ⭐ MODIFICATION ICI : $session → $live
     public function update(Request $request, Course $course, LiveSession $live)
     {
         $data = $request->validate([
@@ -80,31 +78,47 @@ class LiveSessionController extends Controller
                          ->with('success', 'Session mise à jour.');
     }
 
-    // ⭐ MODIFICATION ICI : $session → $live
-    public function start(Course $course, LiveSession $live)
-    {
-        $live->update([
-            'status' => 'live',
-            'started_at' => now(),
-        ]);
+    /**
+     * Démarrer la session en direct
+     */
+    /**
+ /**
+ * Démarrer la session en direct
+ */
+public function start(Course $course, $liveId)
+{
+    $live = LiveSession::where('course_id', $course->id)->findOrFail($liveId);
+    $live->update([
+        'status'     => 'live',
+        'started_at' => now(),
+    ]);
 
-        return redirect()->route('instructor.courses.live.index', $course)
-                         ->with('success', 'Session en direct lancée !');
-    }
+    // Forcer le rechargement du modèle pour éviter le cache
+    $live->refresh();
 
-    // ⭐ MODIFICATION ICI : $session → $live
-    public function end(Course $course, LiveSession $live)
-    {
-        $live->update([
-            'status' => 'ended',
-            'ended_at' => now(),
-        ]);
+    // Redirection vers la page de visualisation
+    return redirect()->route('live.show', ['live' => $live->id])
+                     ->with('success', 'Session en direct lancée !');
+}
 
-        return redirect()->route('instructor.courses.live.index', $course)
-                         ->with('success', 'Session terminée.');
-    }
+/**
+ * Terminer la session en direct
+ */
+public function end(Course $course, $liveId)
+{
+    $live = LiveSession::where('course_id', $course->id)->findOrFail($liveId);
+    $live->update([
+        'status'   => 'ended',
+        'ended_at' => now(),
+    ]);
 
-    // ⭐ MODIFICATION ICI : $session → $live
+    $live->refresh();
+
+    // Rediriger vers la liste des sessions du cours
+    return redirect()->route('instructor.courses.live.index', $course)
+                     ->with('success', 'Session terminée.');
+}
+
     public function destroy(Course $course, LiveSession $live)
     {
         $live->delete();

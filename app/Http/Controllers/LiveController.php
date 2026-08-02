@@ -3,23 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Models\LiveSession;
+use Illuminate\Support\Facades\Auth;
 
 class LiveController extends Controller
 {
-    public function show(LiveSession $session)
+    public function show(LiveSession $live)
     {
-        $user = auth()->user();
+        // Charger la relation course pour éviter null
+        $live->load('course');
 
-        // Vérifier que l'utilisateur est inscrit OU qu'il est l'instructeur du cours
-        if (!$user->isEnrolledIn($session->course_id) && $user->id != $session->course->user_id) {
-            abort(403);
+        $user = Auth::user();
+
+        // Vérifier l'accès : inscrit au cours OU instructeur OU admin
+        $courseId = $live->course_id;
+        $isInstructor = $live->course && $user->id === $live->course->user_id;
+        $isAdmin = $user->isAdmin();
+        $isEnrolled = $courseId ? $user->isEnrolledIn((int) $courseId) : false;
+
+        if (!$isEnrolled && !$isInstructor && !$isAdmin) {
+            abort(403, 'Vous devez être inscrit à ce cours pour accéder au live.');
         }
 
-        if ($session->status === 'ended' || $session->status === 'canceled') {
-            return redirect()->route('courses.show', $session->course_id)
-                             ->with('error', 'Cette session est terminée.');
-        }
-
-        return view('live.show', compact('session'));
+        // La vue gérera l'affichage selon le statut
+        return view('live.show', compact('live'));
     }
 }
