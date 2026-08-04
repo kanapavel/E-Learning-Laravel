@@ -1,4 +1,12 @@
 @extends('layouts.app')
+@section('course_id', $live->course_id ?? '')
+
+@php
+    $courseId = $live->course_id ?? null;
+@endphp
+@if($courseId)
+    <meta name="course-id" content="{{ $courseId }}">
+@endif
 
 @section('title', $live->title)
 

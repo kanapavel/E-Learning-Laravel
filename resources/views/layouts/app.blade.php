@@ -38,7 +38,8 @@
             transform: none !important;
         }
     </style>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script> -->
+    @livewireStyles
 </head>
 <body class="min-h-screen flex flex-col">
 
@@ -256,6 +257,35 @@
         AOS.init({
             duration: 800,
             once: true
+        });
+    </script>
+
+    {{-- Widgets flottants --}}
+@auth
+    @php
+        $routeName = Route::currentRouteName();
+        $excludedRoutes = ['login', 'register', 'password.request', 'password.reset'];
+        $courseIdFromSection = View::hasSection('course_id') ? trim(View::yieldContent('course_id')) : null;
+    @endphp
+    @if(!in_array($routeName, $excludedRoutes) && !empty($routeName))
+        <div id="ai-widgets">
+            @livewire('ai-assistant', ['courseId' => $courseIdFromSection])
+            @if(auth()->user()->isInstructor())
+                @livewire('instructor-assistant')
+            @endif
+        </div>
+    @endif
+@endauth
+
+@livewireScripts
+
+    <script>
+        // Contexte du cours pour l'assistant étudiant
+        document.addEventListener('livewire:load', function () {
+            const courseId = document.querySelector('meta[name="course-id"]')?.content;
+            if (courseId) {
+                Livewire.emit('refreshAssistant', courseId);
+            }
         });
     </script>
 </body>
