@@ -26,6 +26,12 @@ use App\Http\Controllers\Instructor\QuestionController as InstructorQuestionCont
 // Contrôleur admin
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 
+use App\Http\Controllers\Student\ChatController;
+use App\Http\Controllers\Student\RecommendationController;
+use App\Http\Controllers\Instructor\SummaryController;
+use App\Http\Controllers\Instructor\QuizGeneratorController;
+use App\Http\Controllers\TextGeneratorController;
+
 // ─────────────────────────────────────────────────────────
 // 1. Routes publiques
 // ─────────────────────────────────────────────────────────
@@ -138,3 +144,17 @@ Route::middleware(['auth', 'role:admin'])
         Route::put('/utilisateurs/{user}', [AdminUserController::class, 'update'])->name('users.update');
         Route::delete('/utilisateurs/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
     });
+
+    
+// Route de test pour l'assistant instructeur (optionnel)
+Route::middleware(['auth', 'role:admin,instructor'])->group(function () {
+    Route::get('/instructeur/assistant', function () {
+        return view('instructor.assistant');
+    })->name('instructor.assistant');
+});
+
+// Routes pour l'assistant étudiant (nécessaires pour les appels AJAX)
+Route::middleware(['auth'])->prefix('api/assistant')->name('api.assistant.')->group(function () {
+    // Ces routes sont utilisées par le widget (si vous utilisez des appels AJAX)
+    // Nous les ajouterons plus tard si nécessaire
+});
