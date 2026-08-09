@@ -248,22 +248,6 @@ Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus d'i
 
 ---
 
-## 👤 Auteur
-
-**TCHIENDA NANA Sédric Thiérry**
-- Étudiant à l'Institut Africain d'Informatique (IAI-Cameroun)
-- Niveau III - Option Génie Logiciel
-
----
-
-## 🙏 Remerciements
-
-- **Mme NGO NDOUM BIHOLONG Nadine Agnès** - Encadrante académique
-- **M. NGUEKENG METENOU Gildas** - Encadrant professionnel
-- **LAMJUGROUP Digital Solution** - Structure d'accueil
-- **IAI-Cameroun** - Institut de formation
-
----
 
 ## 🔗 Liens utiles
 
