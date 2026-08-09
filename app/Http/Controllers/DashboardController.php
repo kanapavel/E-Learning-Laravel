@@ -45,7 +45,7 @@ class DashboardController extends Controller
 
         $totalCourses = $allCourses->count();
         $publishedCourses = $allCourses->where('published', true)->count();
-        $totalStudents = $allCourses->sum('enrollments_count'); // ✅ maintenant disponible
+        $totalStudents = $allCourses->sum('enrollments_count');
 
         // Revenus totaux
         $totalRevenue = $allCourses->sum(function ($course) {
@@ -57,7 +57,6 @@ class DashboardController extends Controller
         $totalProgressSum = 0;
         $totalProgressCount = 0;
         foreach ($allCourses as $course) {
-            // On charge les inscriptions seulement si nécessaire (évite N+1)
             $course->loadMissing('enrollments.user');
             foreach ($course->enrollments as $enrollment) {
                 $totalProgressSum += $enrollment->progress_percent;
@@ -73,11 +72,25 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        // ===== SESSIONS EN DIRECT =====
+        $courseIds = $allCourses->pluck('id');
+        $liveSessionsCount = \App\Models\LiveSession::whereIn('course_id', $courseIds)
+            ->where('status', 'live')
+            ->count();
+
+        $scheduledSessionsCount = \App\Models\LiveSession::whereIn('course_id', $courseIds)
+            ->where('status', 'scheduled')
+            ->count();
+
+        $totalSessions = $liveSessionsCount + $scheduledSessionsCount;
+
         return view('dashboard.instructor', compact(
             'courses', 'totalCourses', 'publishedCourses', 'totalStudents',
-            'totalRevenue', 'averageProgress', 'recentEnrollments'
+            'totalRevenue', 'averageProgress', 'recentEnrollments',
+            'liveSessionsCount', 'scheduledSessionsCount', 'totalSessions'
         ));
     }
+
     public function admin()
     {
         $totalUsers = \App\Models\User::count();

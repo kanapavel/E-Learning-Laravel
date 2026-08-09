@@ -56,6 +56,16 @@ class DatabaseSeeder extends Seeder
             'duration_minutes' => 480,
         ]);
 
+         // 👇 AJOUTE ICI APRÈS LA CRÉATION DU COURS
+        \App\Models\LiveSession::create([
+            'course_id'      => $course->id,
+            'instructor_id'  => $instructor->id,
+            'title'          => 'Introduction en direct',
+            'description'    => 'Session de lancement du cours',
+            'scheduled_at'   => now()->addDays(2),
+            'status'         => 'scheduled',
+        ]);
+
         // ── 3. Chapitres ───────────────────────────────────────────────────
         $chapter1 = Chapter::create([
             'course_id'   => $course->id,

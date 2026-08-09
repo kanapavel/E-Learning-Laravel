@@ -1,58 +1,315 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🎓 Skillora - Plateforme E-Learning Intelligente
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+[![Laravel](https://img.shields.io/badge/Laravel-13.x-red.svg)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8.3-blue.svg)](https://php.net)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.x-38bdf8.svg)](https://tailwindcss.com)
+[![Livewire](https://img.shields.io/badge/Livewire-3.x-4e56a6.svg)](https://livewire.laravel.com)
+[![MySQL](https://img.shields.io/badge/MySQL-8.x-4479a1.svg)](https://mysql.com)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📖 À propos
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**Skillora** est une plateforme e‑learning moderne, flexible et intelligente qui connecte étudiants, instructeurs et administrateurs. Elle intègre des fonctionnalités avancées d'intelligence artificielle pour accompagner aussi bien les apprenants que les formateurs dans leur parcours.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+> 🚀 **Le sanctuaire intellectuel pour les esprits curieux**
 
-## Learning Laravel
+### 🎯 Objectifs
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- Offrir une expérience d'apprentissage en ligne complète et intuitive
+- Faciliter la création et la gestion de cours pour les instructeurs
+- Accompagner les étudiants avec un assistant IA contextuel
+- Permettre des sessions en direct interactives
+- Fournir des outils d'analyse et de suivi de progression
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## ✨ Fonctionnalités principales
 
-## Agentic Development
+### 👨‍🎓 Pour les Étudiants
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+- 📚 **Catalogue de cours** : Parcourir, filtrer et rechercher des cours
+- 📝 **Inscription aux cours** : S'inscrire et accéder au contenu
+- 📖 **Leçons interactives** : Vidéo, texte ou mixte
+- ✅ **Suivi de progression** : Marquage des leçons terminées
+- 📊 **Quiz auto-corrigés** : QCM, vrai/faux avec correction automatique
+- 💬 **Forum par cours** : Poser des questions, échanger avec la communauté
+- 🤖 **Assistant IA étudiant** : Chatbot contextuel avec synthèse de cours
+- 🔔 **Notifications** : Alertes en temps réel
+- 📱 **Interface responsive** : Accessible sur tous les appareils
+
+### 👨‍🏫 Pour les Instructeurs
+
+- 🎯 **Gestion de cours** : Créer, modifier, publier des cours
+- 📂 **Chapitres et leçons** : Organisation modulaire
+- 🎥 **Leçons variées** : Vidéo, texte, mixte avec ressources
+- 📝 **Quiz paramétrables** : Score de passage, temps limite, tentatives
+- 🤖 **Assistant IA instructeur** : Génération de plan, contenu, quiz, optimisation
+- 📺 **Sessions en direct** : Streaming YouTube, visioconférence Yandex Telemost
+- 📊 **Tableau de bord** : Statistiques, inscriptions, revenus
+- 🎥 **Simulation de caméra** : Tests et démonstrations
+
+### 🔧 Pour les Administrateurs
+
+- 👥 **Gestion des utilisateurs** : Modification des rôles, suppression
+- 📊 **Statistiques globales** : Superviser l'activité de la plateforme
+- 🛡️ **Modération** : Gérer les contenus inappropriés
+
+---
+
+## 🧠 Intelligence Artificielle
+
+Skillora intègre deux assistants IA via l'**API Groq** (modèle `llama-3.1-8b-instant`) :
+
+### 🤖 Assistant Étudiant
+- Chatbot contextuel (connaît le cours en cours)
+- Synthèse structurée de cours
+- Suggestions de questions pour approfondir
+- Recommandations personnalisées
+
+### 🎯 Assistant Instructeur
+- **Plan** : Génération automatique de plan de cours
+- **Contenu** : Création de contenu de leçon structuré
+- **Quiz** : Génération de QCM avec réponses
+- **Optimiser** : Suggestions d'amélioration du cours
+
+---
+
+## 🛠️ Technologies
+
+### Backend
+| Technologie | Version | Rôle |
+|-------------|---------|------|
+| Laravel | 13.x | Framework principal |
+| PHP | 8.3+ | Langage |
+| MySQL | 8.x | Base de données |
+
+### Frontend
+| Technologie | Version | Rôle |
+|-------------|---------|------|
+| Tailwind CSS | 3.x | Framework CSS |
+| Alpine.js | 3.x | Interactions dynamiques |
+| Livewire | 3.x | Widgets flottants |
+| Vite | 5.x | Build tool |
+
+### IA & Services externes
+| Service | Rôle |
+|---------|------|
+| Groq API | Assistants IA (modèle llama-3.1-8b-instant) |
+| Yandex Telemost | Visioconférence interactive |
+| YouTube Live | Streaming en direct |
+| Railway | Hébergement (production) |
+
+---
+
+## 📦 Installation
+
+### Prérequis
+
+- PHP 8.3+
+- Composer
+- Node.js 18+ / NPM
+- MySQL 8+
+
+### Étapes d'installation
 
 ```bash
-composer require laravel/boost --dev
+# 1. Cloner le dépôt
+git clone https://github.com/votre-repo/skillora.git
+cd skillora
 
-php artisan boost:install
+# 2. Installer les dépendances PHP
+composer install
+
+# 3. Installer les dépendances frontend
+npm install
+
+# 4. Configurer l'environnement
+cp .env.example .env
+
+# 5. Générer la clé d'application
+php artisan key:generate
+
+# 6. Configurer la base de données dans .env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=elearning
+DB_USERNAME=root
+DB_PASSWORD=rootpassword
+
+# 7. Configurer la clé API Groq dans .env
+GROQ_API_KEY=gsk_votre_cle_ici
+
+# 8. Créer le lien symbolique pour le stockage
+php artisan storage:link
+
+# 9. Lancer les migrations et les seeders
+php artisan migrate --seed
+
+# 10. Lancer le serveur de développement
+php artisan serve
+# et dans un autre terminal
+npm run dev
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+---
 
-## Contributing
+## 🔑 Accès par défaut (après seeding)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+| Rôle | Email | Mot de passe |
+|------|-------|--------------|
+| **Administrateur** | admin@elearning.com | password |
+| **Instructeur** | instructor@elearning.com | password |
+| **Étudiant** | student@elearning.com | password |
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 🏗️ Structure du projet
 
-## Security Vulnerabilities
+```
+Skillora/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/          # Contrôleurs
+│   │   ├── Livewire/             # Widgets Livewire
+│   │   │   ├── AiAssistant.php   # Assistant étudiant
+│   │   │   └── InstructorAssistant.php # Assistant instructeur
+│   │   └── Middleware/           # Middleware personnalisé
+│   ├── Livewire/                 # Composants Livewire
+│   ├── Models/                   # Modèles Eloquent
+│   ├── Services/                 # Services (AIService, etc.)
+│   └── Policies/                 # Politiques d'autorisation
+├── config/                       # Configuration
+├── database/
+│   ├── migrations/               # Migrations DB
+│   └── seeders/                  # Données de test
+├── resources/
+│   ├── views/                    # Vues Blade
+│   │   ├── layouts/              # Layout principal
+│   │   ├── livewire/             # Vues Livewire
+│   │   ├── instructor/           # Vues instructeur
+│   │   └── courses/              # Vues cours
+│   └── css/                      # Assets Tailwind
+├── routes/
+│   └── web.php                   # Routes
+├── public/                       # Fichiers publics
+└── .env                          # Variables d'environnement
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## 🚀 Déploiement sur Railway
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+1. Pousser le code sur GitHub
+2. Créer un projet sur Railway
+3. Lier le dépôt GitHub
+4. Configurer les variables d'environnement :
+   - `APP_ENV=production`
+   - `APP_DEBUG=false`
+   - `APP_URL=https://skillora.railway.app`
+   - `DATABASE_URL=mysql://...`
+   - `GROQ_API_KEY=gsk_...`
+5. Déployer automatiquement
+6. Exécuter les migrations :
+   ```bash
+   php artisan migrate --force
+   ```
+
+---
+
+## 📱 Widgets flottants
+
+Skillora dispose de deux widgets flottants accessibles en bas à droite de l'écran :
+
+| Widget | Icône | Utilisateur | Fonction |
+|--------|-------|-------------|----------|
+| **Assistant IA étudiant** | 🤖 | Étudiant / Instructeur | Chatbot contextuel, synthèse de cours |
+| **Assistant IA instructeur** | 🎯 | Instructeur | Génération de plan, contenu, quiz, optimisation |
+
+---
+
+## 🤝 Contribution
+
+Les contributions sont les bienvenues ! Voici comment procéder :
+
+1. Fork le projet
+2. Créer une branche (`git checkout -b feature/AmazingFeature`)
+3. Commiter vos modifications (`git commit -m 'Add some AmazingFeature'`)
+4. Pousser la branche (`git push origin feature/AmazingFeature`)
+5. Ouvrir une Pull Request
+
+---
+
+## 📄 Licence
+
+Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus d'informations.
+
+---
+
+## 👤 Auteur
+
+**TCHIENDA NANA Sédric Thiérry**
+- Étudiant à l'Institut Africain d'Informatique (IAI-Cameroun)
+- Niveau III - Option Génie Logiciel
+
+---
+
+## 🙏 Remerciements
+
+- **Mme NGO NDOUM BIHOLONG Nadine Agnès** - Encadrante académique
+- **M. NGUEKENG METENOU Gildas** - Encadrant professionnel
+- **LAMJUGROUP Digital Solution** - Structure d'accueil
+- **IAI-Cameroun** - Institut de formation
+
+---
+
+## 🔗 Liens utiles
+
+- [Laravel Documentation](https://laravel.com/docs)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+- [Livewire Documentation](https://livewire.laravel.com/docs)
+- [Groq API Documentation](https://console.groq.com/docs)
+- [Railway Documentation](https://docs.railway.app)
+
+---
+
+## 📊 Aperçu des fonctionnalités
+
+| Fonctionnalité | Statut |
+|----------------|--------|
+| Authentification (login/register) | ✅ |
+| Gestion des rôles (student/instructor/admin) | ✅ |
+| Catalogue de cours avec filtres | ✅ |
+| Inscription aux cours | ✅ |
+| Suivi de progression | ✅ |
+| Leçons (vidéo/texte/mixte) | ✅ |
+| Quiz auto-corrigés | ✅ |
+| Forum par cours | ✅ |
+| Notifications en temps réel | ✅ |
+| Assistant IA étudiant (chatbot/synthèse) | ✅ |
+| Assistant IA instructeur (plan/contenu/quiz/optimisation) | ✅ |
+| Sessions en direct (YouTube Live) | ✅ |
+| Yandex Telemost (visioconférence) | ✅ |
+| Simulation de caméra | ✅ |
+| Tableaux de bord (étudiant/instructeur/admin) | ✅ |
+| Widgets flottants (Livewire) | ✅ |
+| Déploiement sur Railway | ✅ |
+
+---
+
+## 🎯 Roadmap
+
+- [ ] Intégration des paiements en ligne (Stripe, CinetPay)
+- [ ] Certificats de réussite
+- [ ] Application mobile (Flutter)
+- [ ] Classes virtuelles (WebRTC)
+- [ ] Badges et gamification
+- [ ] Export des données (PDF, CSV)
+- [ ] Support multilingue (anglais, français)
+- [ ] API publique pour les développeurs tiers
+
+---
+
+📌 **Skillora** - *Le sanctuaire intellectuel pour les esprits curieux.*

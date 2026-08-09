@@ -26,6 +26,12 @@ use App\Http\Controllers\Instructor\QuestionController as InstructorQuestionCont
 // Contrôleur admin
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 
+use App\Http\Controllers\Student\ChatController;
+use App\Http\Controllers\Student\RecommendationController;
+use App\Http\Controllers\Instructor\SummaryController;
+use App\Http\Controllers\Instructor\QuizGeneratorController;
+use App\Http\Controllers\TextGeneratorController;
+
 // ─────────────────────────────────────────────────────────
 // 1. Routes publiques
 // ─────────────────────────────────────────────────────────
@@ -89,6 +95,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
     Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
     Route::delete('/notifications', [NotificationController::class, 'destroyAll'])->name('notifications.destroy-all');
+    // Live sessions
+    Route::get('live/{live}', [App\Http\Controllers\LiveController::class, 'show'])->name('live.show');
 });
 
 // ─────────────────────────────────────────────────────────
@@ -119,7 +127,10 @@ Route::middleware(['auth', 'role:admin,instructor'])
             Route::put('/questions/{question}', [InstructorQuestionController::class, 'update'])->name('questions.update');
             Route::delete('/questions/{question}', [InstructorQuestionController::class, 'destroy'])->name('questions.destroy');
         });
-    });
+        Route::resource('courses.live', 'App\Http\Controllers\Instructor\LiveSessionController')->except(['show']);
+Route::post('courses/{course}/live/{live}/start', [App\Http\Controllers\Instructor\LiveSessionController::class, 'start'])->name('courses.live.start');
+Route::post('courses/{course}/live/{live}/end', [App\Http\Controllers\Instructor\LiveSessionController::class, 'end'])->name('courses.live.end');
+});
 
 // ─────────────────────────────────────────────────────────
 // 5. Routes administrateur (gestion des utilisateurs)
@@ -133,3 +144,17 @@ Route::middleware(['auth', 'role:admin'])
         Route::put('/utilisateurs/{user}', [AdminUserController::class, 'update'])->name('users.update');
         Route::delete('/utilisateurs/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
     });
+
+    
+// Route de test pour l'assistant instructeur (optionnel)
+Route::middleware(['auth', 'role:admin,instructor'])->group(function () {
+    Route::get('/instructeur/assistant', function () {
+        return view('instructor.assistant');
+    })->name('instructor.assistant');
+});
+
+// Routes pour l'assistant étudiant (nécessaires pour les appels AJAX)
+Route::middleware(['auth'])->prefix('api/assistant')->name('api.assistant.')->group(function () {
+    // Ces routes sont utilisées par le widget (si vous utilisez des appels AJAX)
+    // Nous les ajouterons plus tard si nécessaire
+});

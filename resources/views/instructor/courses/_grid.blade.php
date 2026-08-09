@@ -56,7 +56,11 @@
                             <div class="bg-primary h-1.5 rounded-full" style="width: {{ $avgProgress }}%"></div>
                         </div>
                     @endif
+                    <!-- Actions -->
                     <div class="flex items-center justify-end gap-3 mt-4 pt-2 border-t border-outline/20">
+                        <a href="{{ route('courses.show', $course) }}" class="text-primary hover:text-primary/80 text-sm font-medium transition flex items-center gap-1">
+                            <i class="fas fa-eye"></i> Voir
+                        </a>
                         <a href="{{ route('instructor.courses.edit', $course) }}" class="text-primary hover:text-primary/80 text-sm font-medium transition flex items-center gap-1">
                             <i class="fas fa-edit"></i> Modifier
                         </a>

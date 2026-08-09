@@ -107,5 +107,10 @@ class Course extends Model
     {
         return $query->where('level', $level);
     }
+
+    public function liveSessions()
+    {
+        return $this->hasMany(LiveSession::class);
+    }
     
 }
